@@ -1,4 +1,5 @@
 package com.example.teamproject.register
+
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,61 +26,70 @@ import com.example.teamproject.register.user.Repository
 import com.example.teamproject.register.user.UserData
 import com.example.teamproject.register.user.UserViewModel
 import com.example.teamproject.register.user.UserViewModelFactory
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun Register(navController: NavHostController) {
     val table = Firebase.database.getReference("UserDB/Users")
     val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)))
 
-    var userID by remember{
+    var userID by remember {
         mutableStateOf("")
     }
-    var userPasswd by remember{
+    var userPasswd by remember {
         mutableStateOf("")
     }
-    var userName by remember{
+    var userName by remember {
         mutableStateOf("")
     }
 
-    Column(modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Log.d("RegisterViewModel",userViewModel.toString() )
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Log.d("RegisterViewModel", userViewModel.toString())
         Text(
             text = "회원가입",
             fontSize = 40.sp,
             fontWeight = FontWeight.ExtraBold
         )
 
-        Text(
-            text = "",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.ExtraBold
+        OutlinedTextField(
+            value = userID,
+            onValueChange = { userID = it },
+            label = { Text("아이디") }
         )
 
-        OutlinedTextField(value = userID?:"",
-            onValueChange = {userID =it},
-            label = {Text("아이디")}
-        )
-
-        OutlinedTextField( value = userPasswd?:"",
+        OutlinedTextField(
+            value = userPasswd,
             onValueChange = { userPasswd = it },
             label = { Text("Enter password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
-        OutlinedTextField(value = userName?:"",
-            onValueChange = {userName =it},
-            label = {Text("닉네임")}
+
+        OutlinedTextField(
+            value = userName,
+            onValueChange = { userName = it },
+            label = { Text("닉네임") }
         )
+
         Button(onClick = {
-            userViewModel.userInit(UserData(userID,userPasswd,userName))
+            val newUser = UserData(
+                UserId = userID,
+                UserPw = userPasswd,
+                UserName = userName,
+                favoriteLocation = mutableListOf(),  // Initialize with empty list
+                friendList = mutableListOf()  // Initialize with empty list
+            )
+            userViewModel.userInit(newUser)
             navController.navigate(NavRoutes.Login.route)
         }) {
             Text("가입하기")
         }
+
         Button(onClick = {
             navController.navigate(NavRoutes.Login.route)
         }) {

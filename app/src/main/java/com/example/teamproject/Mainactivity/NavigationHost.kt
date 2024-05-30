@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.teamproject.Mainactivity.items.Contacts
-import com.example.teamproject.Mainactivity.items.Favorites
 import com.example.teamproject.Mainactivity.items.Home
+import com.example.teamproject.Mainactivity.location.FavoritesScreen
+import com.example.teamproject.Mainactivity.location.ReviewScreen
 import com.example.teamproject.NavRoutes
 
 @Composable
@@ -19,10 +19,11 @@ fun NagivationHost(navController: NavHostController) {
             Home()
         }
         composable(NavRoutes.Contacts.route){
-            Contacts()
+            ReviewScreen(navController)
         }
         composable(NavRoutes.Favorites.route){
-            Favorites()
+            FavoritesScreen(navController)
         }
+
     }
 }

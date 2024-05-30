@@ -14,6 +14,8 @@ import com.example.teamproject.Mainactivity.MainScreen
 import com.example.teamproject.Mainactivity.items.Contacts
 import com.example.teamproject.Mainactivity.items.Favorites
 import com.example.teamproject.Mainactivity.items.Home
+import com.example.teamproject.Mainactivity.location.FavoritesScreen
+import com.example.teamproject.Mainactivity.location.ReviewScreen
 import com.example.teamproject.NavRoutes
 
 @Composable
@@ -60,7 +62,12 @@ fun LoginNavGraph(navController: NavHostController) {
             composable(NavRoutes.MainScreen.route){
                 MainScreen()
             }
+            composable(NavRoutes.ReviewScreen.route){
+                ReviewScreen(navController)
+            }
+            composable(NavRoutes.FavoritesScreen.route){
+                FavoritesScreen(navController)
+            }
         }
     }
 }
-

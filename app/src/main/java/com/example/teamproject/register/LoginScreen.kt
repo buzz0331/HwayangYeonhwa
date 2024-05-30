@@ -79,6 +79,7 @@ fun LoginScreen(navController: NavHostController) {
                 Log.d("Repository", "Login result: $loginResult")
 
                 if (loginResult) {
+                    Log.d("Repository", "Login result")
                     navController.navigate(NavRoutes.MainScreen.route)
                 } else {
                     showAlertDialog = true

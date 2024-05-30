@@ -75,7 +75,7 @@ fun Register(navController: NavHostController) {
             label = {Text("닉네임")}
         )
         Button(onClick = {
-            userViewModel.UserInit(UserData(userID,userPasswd,userName))
+            userViewModel.userInit(UserData(userID,userPasswd,userName))
             navController.navigate(NavRoutes.Login.route)
         }) {
             Text("가입하기")

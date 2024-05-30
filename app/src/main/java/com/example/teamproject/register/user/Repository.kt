@@ -1,6 +1,6 @@
 package com.example.teamproject.register.user
 
-
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -8,33 +8,30 @@ import com.google.firebase.database.ValueEventListener
 
 class Repository(private val table: DatabaseReference) {
 
-    suspend fun InsertUser(userData: UserData) {
+    suspend fun insertUser(userData: UserData) {
         table.child(userData.UserId).setValue(userData)
-
     }
-    suspend fun DeleteItem(userData: UserData) {
+
+    suspend fun deleteItem(userData: UserData) {
         table.child(userData.UserId.toString()).removeValue()
     }
-    suspend fun CheckInfo(id:String,pw:String):Boolean{
-        var result = false
-        val listener = object:ValueEventListener{
+
+    fun initializeUserList(callback: (List<UserData>) -> Unit) {
+        val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (usersnapshot in snapshot.children){
-                    val user = usersnapshot.getValue(UserData::class.java)
-                    user?.let {
-                        if (it.UserId==(id)&&it.UserPw==(pw)){
-                            result = true
-                        }
-                    }
+                val userList = mutableListOf<UserData>()
+                for (userSnapshot in snapshot.children) {
+                    val user = userSnapshot.getValue(UserData::class.java)
+                    user?.let { userList.add(it) }
                 }
+                Log.d("Repository", "User list initialized with ${userList.size} users.")
+                callback(userList)
             }
-            override fun onCancelled(error: DatabaseError) {}
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Repository", "Database error: ${error.message}")
+            }
         }
-        table.addValueEventListener(listener)
-        table.removeEventListener(listener)
-
-        return result
+        table.addListenerForSingleValueEvent(listener)
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.example.teamproject.register
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,8 +28,8 @@ import com.example.teamproject.NavRoutes
 import com.example.teamproject.register.user.Repository
 import com.example.teamproject.register.user.UserViewModel
 import com.example.teamproject.register.user.UserViewModelFactory
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -65,6 +66,7 @@ fun LoginScreen(navController: NavHostController) {
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
+
         Row {
             Button(onClick = {
                 navController.navigate(NavRoutes.Register.route)
@@ -72,8 +74,9 @@ fun LoginScreen(navController: NavHostController) {
                 Text("회원가입")
             }
             Button(onClick = {
+                Log.d("Repository", "Attempting to log in with ID: $userID")
                 val loginResult = userViewModel.checkInfo(userID, userPasswd)
-
+                Log.d("Repository", "Login result: $loginResult")
 
                 if (loginResult) {
                     navController.navigate(NavRoutes.MainScreen.route)
@@ -97,6 +100,5 @@ fun LoginScreen(navController: NavHostController) {
                 )
             }
         }
-
     }
 }

@@ -21,26 +21,32 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.teamproject.NavRoutes
-import com.example.teamproject.register.user.NavViewModel
+import com.example.teamproject.register.user.Repository
+import com.example.teamproject.register.user.UserData
+import com.example.teamproject.register.user.UserViewModel
+import com.example.teamproject.register.user.UserViewModelFactory
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 
 @Composable
 fun Register(navController: NavHostController) {
-    val navViewModel: NavViewModel = viewModel(viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
+    val table = Firebase.database.getReference("UserDB/Users")
+    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)))
 
     var userID by remember{
-        mutableStateOf(navViewModel.userID)
+        mutableStateOf("")
     }
     var userPasswd by remember{
-        mutableStateOf(navViewModel.userPasswd)
+        mutableStateOf("")
     }
     var userName by remember{
-        mutableStateOf(navViewModel.userName)
+        mutableStateOf("")
     }
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Log.d("RegisterViewModel",navViewModel.toString() )
+        Log.d("RegisterViewModel",userViewModel.toString() )
         Text(
             text = "회원가입",
             fontSize = 40.sp,
@@ -69,7 +75,7 @@ fun Register(navController: NavHostController) {
             label = {Text("닉네임")}
         )
         Button(onClick = {
-            navViewModel.addUserInfo(userID,userPasswd,userName)
+            userViewModel.UserInit(UserData(userID,userPasswd,userName))
             navController.navigate(NavRoutes.Login.route)
         }) {
             Text("가입하기")

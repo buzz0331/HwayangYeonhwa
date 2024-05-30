@@ -11,16 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.teamproject.register.user.NavViewModel
+import com.example.teamproject.register.user.UserViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(NavViewModel:NavViewModel=viewModel()) {
+fun MainScreen(NavViewModel:UserViewModel=viewModel()) {
     val navController = rememberNavController()
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = NavViewModel.userName) }
+                title = { Text(text = "") }
             )
         },
         bottomBar = {

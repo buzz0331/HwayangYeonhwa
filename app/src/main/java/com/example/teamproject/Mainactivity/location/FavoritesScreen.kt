@@ -14,17 +14,25 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.teamproject.NavRoutes
+import com.example.teamproject.register.user.Repository
 import com.example.teamproject.register.user.UserData
 import com.example.teamproject.register.user.UserViewModel
+import com.example.teamproject.register.user.UserViewModelFactory
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 @Composable
-fun FavoritesScreen(navController: NavController, navViewModel: UserViewModel = viewModel()) {
+fun FavoritesScreen(navController: NavController) {
+    val table = Firebase.database.getReference("UserDB/Users")
+    val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)))
+
     val userData by remember {
         mutableStateOf(navViewModel.UserList[0]) // 수정필요
     }
 
     Column (modifier = Modifier
         .fillMaxWidth()){
+
         Text("${userData.UserName}님의 선호 장소 목록")
         FavoritesList(userData) {locationData->
             navController.navigate(NavRoutes.Home.route)

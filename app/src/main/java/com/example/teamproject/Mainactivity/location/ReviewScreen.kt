@@ -9,12 +9,12 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.teamproject.register.LocalNavGraphViewModelStoreOwner
 import com.example.teamproject.register.user.Repository
 import com.example.teamproject.register.user.UserViewModel
 import com.example.teamproject.register.user.UserViewModelFactory
@@ -27,12 +27,10 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun ReviewScreen(navController: NavController) {
     val table = Firebase.database.getReference("UserDB/Users")
-    val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)))
-    val locationData by remember {
-        mutableStateOf((navViewModel.LocationList))
-    }
+    val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
+        viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
-    val data by remember { mutableStateOf(navViewModel.LocationList[0]) }
+    val data by remember { navViewModel.Location }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text("\'${data.Name}\'에 대한 긍정적 리뷰")
@@ -50,12 +48,16 @@ fun ReviewScreen(navController: NavController) {
 @Composable
 fun ReviewPosList(locationData: LocationData, onPosReviewClick: (Int) -> Unit) {
     LazyColumn {
-        items(locationData.PosReview.size) { index ->
-            ReviewItem(
-                "리뷰${index + 1}",
-                locationData.PosReview[index],
-                onClick = { onPosReviewClick(index) }
-            )
+        locationData.PosReview?.let {
+            items(it.size) { index ->
+                (locationData.PosReview?.get(index) ?: null)?.let {
+                    ReviewItem(
+                        "리뷰${index + 1}",
+                        it,
+                        onClick = { onPosReviewClick(index) }
+                    )
+                }
+            }
         }
     }
 }
@@ -63,12 +65,14 @@ fun ReviewPosList(locationData: LocationData, onPosReviewClick: (Int) -> Unit) {
 @Composable
 fun ReviewNegList(locationData: LocationData, onNegReviewClick: (Int) -> Unit) {
     LazyColumn {
-        items(locationData.NegReview.size) { index ->
-            ReviewItem(
-                "리뷰${index + 1}",
-                locationData.NegReview[index],
-                onClick = { onNegReviewClick(index) }
-            )
+        locationData.NegReview?.let {
+            items(it.size) { index ->
+                ReviewItem(
+                    "리뷰${index + 1}",
+                    locationData.NegReview?.get(index) ?: 0,
+                    onClick = { onNegReviewClick(index) }
+                )
+            }
         }
     }
 }

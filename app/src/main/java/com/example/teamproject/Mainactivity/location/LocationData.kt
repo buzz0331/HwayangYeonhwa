@@ -4,17 +4,18 @@ data class LocationData(
     var Category: Int, // 장소 카테고리
     var Name: String, // 장소 이름
     var ID: Int,
+    var isAccepted: Boolean = false,
+    
+    var PosReview: MutableList<Int>?, //
 
-    var PosReview: MutableList<Int>, //
-
-    var NegReview: MutableList<Int>
+    var NegReview: MutableList<Int>?
 ){
     fun updatePosReview(index: Int) {
-        PosReview[index] += 1
+        PosReview?.set(index, 1)
     }
 
     fun updataNegReview(index: Int){
-        NegReview[index] += 1
+        NegReview?.set(index, 1)
     }
 
 

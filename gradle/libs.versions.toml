@@ -12,6 +12,7 @@ lifecycleViewmodelCompose = "2.8.0"
 navigationCompose = "2.8.0-beta01"
 googleServices = "4.4.1"
 firebaseDatabase = "21.0.0"
+googleGmsGoogleServices = "4.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,4 +37,5 @@ firebase-database = { group = "com.google.firebase", name = "firebase-database",
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

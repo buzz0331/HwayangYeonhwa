@@ -81,6 +81,7 @@ fun Register(navController: NavHostController) {
                 UserId = userID,
                 UserPw = userPasswd,
                 UserName = userName,
+                isMaster = false,
                 favoriteLocation = mutableListOf(),  // Initialize with empty list
                 friendList = mutableListOf()  // Initialize with empty list
             )

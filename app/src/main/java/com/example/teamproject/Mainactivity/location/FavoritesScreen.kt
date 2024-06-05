@@ -8,12 +8,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.teamproject.NavRoutes
+import com.example.teamproject.register.LocalNavGraphViewModelStoreOwner
 import com.example.teamproject.register.user.Repository
 import com.example.teamproject.register.user.UserData
 import com.example.teamproject.register.user.UserViewModel
@@ -24,10 +24,11 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun FavoritesScreen(navController: NavController) {
     val table = Firebase.database.getReference("UserDB/Users")
-    val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)))
+    val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
+        viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
     val userData by remember {
-        mutableStateOf(navViewModel.UserList[0]) // 수정필요
+        navViewModel.User // 수정필요
     }
 
     Column (modifier = Modifier
@@ -35,7 +36,7 @@ fun FavoritesScreen(navController: NavController) {
 
         Text("${userData.UserName}님의 선호 장소 목록")
         FavoritesList(userData) {locationData->
-            navController.navigate(NavRoutes.Home.route)
+            navController.navigate(NavRoutes.PlaceInfoScreen.route)
 
         }
     }
@@ -44,9 +45,11 @@ fun FavoritesScreen(navController: NavController) {
 @Composable
 fun FavoritesList(userData:UserData, onItemClick: (LocationData) -> Unit) {
     LazyColumn {
-        items(userData.favoriteLocation.size){index->
-            Text("${index+1}.")
-            FavoritesLocation(userData.favoriteLocation[index], onItemClick)
+        userData.favoriteLocation?.let {
+            items(it.size){ index->
+                Text("${index+1}.")
+                (userData.favoriteLocation?.get(index) ?: null)?.let { FavoritesLocation(it, onItemClick) }
+            }
         }
     }
 }

@@ -10,4 +10,7 @@ sealed class NavRoutes (val route: String) {
     object MainScreen: NavRoutes("MainScreen")
     object ReviewScreen: NavRoutes("ReviewScreen")
     object FavoritesScreen: NavRoutes("FavoritesScreen")
+    object PlaceInfoScreen: NavRoutes("PlaceInfoScreen")
+    object AddLocationScreen: NavRoutes("AddLocationScreen")
+    object MasterScreen: NavRoutes("MasterScreen")
 }

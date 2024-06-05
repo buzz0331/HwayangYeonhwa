@@ -6,9 +6,9 @@ data class UserData(
     var UserId:String,
     var UserPw:String,
     var UserName:String,
-
-    var favoriteLocation: MutableList<LocationData>,
-    var friendList: MutableList<UserData>
+    var isMaster:Boolean,
+    var favoriteLocation: MutableList<LocationData>?,
+    var friendList: MutableList<String>?
 ){
-    constructor():this("admin","1234","admin", mutableListOf() ,mutableListOf())
+    constructor():this("admin","1234","admin",false, mutableListOf() ,mutableListOf())
 }

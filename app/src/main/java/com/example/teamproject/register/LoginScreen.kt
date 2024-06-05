@@ -35,7 +35,8 @@ import com.google.firebase.ktx.Firebase
 fun LoginScreen(navController: NavHostController) {
 
     val table = Firebase.database.getReference("UserDB/Users")
-    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)))
+    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
+        viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
     var userID by remember { mutableStateOf("") }
     var userPasswd by remember { mutableStateOf("") }
@@ -78,8 +79,11 @@ fun LoginScreen(navController: NavHostController) {
                 val loginResult = userViewModel.checkInfo(userID, userPasswd)
                 Log.d("Repository", "Login result: $loginResult")
 
-                if (loginResult) {
+                if(userViewModel.checkMaster(userID,userPasswd)){
+                    navController.navigate(NavRoutes.MasterScreen.route)
+                } else if (loginResult) {
                     Log.d("Repository", "Login result")
+                    userViewModel.setUser("user")
                     navController.navigate(NavRoutes.MainScreen.route)
                 } else {
                     showAlertDialog = true

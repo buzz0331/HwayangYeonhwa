@@ -74,6 +74,19 @@ fun PlaceInfoScreen(navController: NavController) {
 
         Text(text = "장소 설명: ${location_data.review}", color = Color.Black)
 
+        if (imageUrls.size > 1 && imageUrls[1].isNotEmpty()) {
+            Text(text = "메뉴", color = Color.Black)
+            val menuPainter: Painter = rememberAsyncImagePainter(model = imageUrls[1])
+            Image(
+                painter = menuPainter,
+                contentDescription = "메뉴 이미지",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = ContentScale.Crop
+            )
+        }
+
         Button(onClick = { navController.navigate(NavRoutes.ReviewScreen.route) }) {
             Text(text = "후기")
         }

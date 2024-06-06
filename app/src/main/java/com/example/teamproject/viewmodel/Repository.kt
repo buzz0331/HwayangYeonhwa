@@ -1,4 +1,4 @@
-package com.example.teamproject.register.user
+package com.example.teamproject.viewmodel
 
 import android.util.Log
 import com.google.firebase.database.DataSnapshot

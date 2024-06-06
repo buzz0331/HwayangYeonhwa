@@ -1,5 +1,8 @@
-package com.example.teamproject.Mainactivity.location
+package com.example.teamproject.screen.locationscreen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,10 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.teamproject.register.LocalNavGraphViewModelStoreOwner
-import com.example.teamproject.register.user.Repository
-import com.example.teamproject.register.user.UserViewModel
-import com.example.teamproject.register.user.UserViewModelFactory
+import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
+import com.example.teamproject.viewmodel.LocationData
+import com.example.teamproject.viewmodel.Repository
+import com.example.teamproject.viewmodel.UserViewModel
+import com.example.teamproject.viewmodel.UserViewModelFactory
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -41,7 +45,22 @@ fun AddLocationScreen(navController: NavController) {
     var placeName by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
+    var review by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var menuImageUri by remember { mutableStateOf<Uri?>(null) }
     val categories = listOf("음식점", "카페", "기타")
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        imageUri = uri
+    }
+
+    val menuLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        menuImageUri = uri
+    }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -87,10 +106,60 @@ fun AddLocationScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        TextField(
+            value = review,
+            onValueChange = { review = it },
+            label = { Text("장소 설명") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { launcher.launch("image/*") },
+            modifier = Modifier.align(Alignment.Start)
+        ) {
+            Text("사진 추가")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (selectedCategory == "음식점") {
+            Button(
+                onClick = { menuLauncher.launch("image/*") },
+                modifier = Modifier.align(Alignment.Start)
+            ) {
+                Text("메뉴 사진 추가")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
                 // 장소 등록 로직
-//                      navViewModel.
+                if (placeName.isNotEmpty() && selectedCategory.isNotEmpty() && location.isNotEmpty()) {
+                    val newLocation = LocationData(
+                        Category = when (selectedCategory) {
+                            "음식점" -> 1
+                            "카페" -> 2
+                            else -> 3
+                        },
+                        Name = placeName,
+                        ID = navViewModel.LocationList.size + 1,
+                        isAccepted = true,
+                        imageUrl = "",
+                        review = review,
+                        PosReview = mutableListOf(),
+                        NegReview = mutableListOf()
+                    )
+                    // 사진 저장 로직 추가
+                    imageUri?.let { newLocation.imageUrl = it.toString() }
+                    menuImageUri?.let { newLocation.imageUrl += "|${it.toString()}" }
+
+                    navViewModel.addLocation(newLocation)
+                    navController.popBackStack()
+                }
             },
             modifier = Modifier.align(Alignment.End)
         ) {

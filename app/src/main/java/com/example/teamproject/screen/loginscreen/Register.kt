@@ -1,4 +1,4 @@
-package com.example.teamproject.register
+package com.example.teamproject.screen.loginscreen
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -21,11 +21,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.teamproject.NavRoutes
-import com.example.teamproject.register.user.Repository
-import com.example.teamproject.register.user.UserData
-import com.example.teamproject.register.user.UserViewModel
-import com.example.teamproject.register.user.UserViewModelFactory
+import com.example.teamproject.navigation.NavRoutes
+import com.example.teamproject.viewmodel.Repository
+import com.example.teamproject.viewmodel.UserData
+import com.example.teamproject.viewmodel.UserViewModel
+import com.example.teamproject.viewmodel.UserViewModelFactory
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 

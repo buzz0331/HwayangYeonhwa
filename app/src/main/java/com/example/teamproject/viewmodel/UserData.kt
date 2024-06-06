@@ -1,6 +1,4 @@
-package com.example.teamproject.register.user
-
-import com.example.teamproject.Mainactivity.location.LocationData
+package com.example.teamproject.viewmodel
 
 data class UserData(
     var UserId:String,

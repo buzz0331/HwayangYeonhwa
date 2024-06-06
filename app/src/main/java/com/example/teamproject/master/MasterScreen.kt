@@ -1,4 +1,4 @@
-package com.example.teamproject.Mainactivity
+package com.example.teamproject.master
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,11 +26,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.teamproject.Mainactivity.location.LocationData
-import com.example.teamproject.register.LocalNavGraphViewModelStoreOwner
-import com.example.teamproject.register.user.Repository
-import com.example.teamproject.register.user.UserViewModel
-import com.example.teamproject.register.user.UserViewModelFactory
+import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
+import com.example.teamproject.viewmodel.LocationData
+import com.example.teamproject.viewmodel.Repository
+import com.example.teamproject.viewmodel.UserViewModel
+import com.example.teamproject.viewmodel.UserViewModelFactory
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -108,7 +108,7 @@ fun ExpandableItemCard(item: Item, onItemRemoved: (Item) -> Unit) {
                                     LocationData(
                                         item.id,
                                         item.name,
-                                        userViewModel.LocationList.lastIndex + 1,true,
+                                        userViewModel.LocationList.lastIndex + 1,true,"","",
                                         mutableListOf(0, 0, 0, 0, 0, 0),
                                         mutableListOf(0, 0, 0, 0, 0, 0)
                                     )

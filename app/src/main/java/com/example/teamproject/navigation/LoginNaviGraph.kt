@@ -1,4 +1,4 @@
-package com.example.teamproject.register
+package com.example.teamproject.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -9,10 +9,11 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.teamproject.Mainactivity.BottomNavigationBar
-import com.example.teamproject.Mainactivity.MainScreen
-import com.example.teamproject.Mainactivity.MasterScreen
-import com.example.teamproject.NavRoutes
+import com.example.teamproject.screen.mainscreen.BottomNavigationBar
+import com.example.teamproject.screen.mainscreen.MainScreen
+import com.example.teamproject.master.MasterScreen
+import com.example.teamproject.screen.loginscreen.LoginScreen
+import com.example.teamproject.screen.loginscreen.Register
 
 @Composable
 fun rememberViewModelStoreOwner(): ViewModelStoreOwner {

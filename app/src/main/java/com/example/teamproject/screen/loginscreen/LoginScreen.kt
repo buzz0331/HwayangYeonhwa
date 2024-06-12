@@ -36,7 +36,8 @@ import com.google.firebase.ktx.Firebase
 fun LoginScreen(navController: NavHostController) {
 
     val table = Firebase.database.getReference("UserDB/Users")
-    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
+    val userViewModel: UserViewModel = viewModel(
+        factory = UserViewModelFactory(Repository(table)),
         viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
     var userID by remember { mutableStateOf("") }
@@ -76,14 +77,13 @@ fun LoginScreen(navController: NavHostController) {
                 Text("회원가입")
             }
             Button(onClick = {
-                Log.d("Repository", "Attempting to log in with ID: $userID")
+                Log.d("Repository","로그인 버튼 클릭: ${userViewModel.UserList}")
                 val loginResult = userViewModel.checkInfo(userID, userPasswd)
                 Log.d("Repository", "Login result: $loginResult")
 
                 if(userViewModel.checkMaster(userID,userPasswd)){
                     navController.navigate(NavRoutes.MainMasterScreen.route)
                 } else if (loginResult) {
-                    Log.d("Repository","${userViewModel.UserList}")
                     userViewModel.setUser(userID)
                     navController.navigate(NavRoutes.MainScreen.route)
                 } else {

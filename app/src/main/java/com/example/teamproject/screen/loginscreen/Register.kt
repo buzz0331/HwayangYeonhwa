@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
 import com.example.teamproject.navigation.NavRoutes
 import com.example.teamproject.viewmodel.Repository
 import com.example.teamproject.viewmodel.UserData
@@ -35,7 +36,9 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun Register(navController: NavHostController) {
     val table = Firebase.database.getReference("UserDB/Users")
-    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)))
+    val userViewModel: UserViewModel = viewModel(
+        factory = UserViewModelFactory(Repository(table)),
+        viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
     var userID by remember { mutableStateOf("") }
     var userPasswd by remember { mutableStateOf("") }

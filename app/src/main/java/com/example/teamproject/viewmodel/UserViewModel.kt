@@ -6,8 +6,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
 class UserViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -44,14 +42,14 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
 //        }
 //    }
 
-    fun userInit(userData: UserData) {
-        viewModelScope.launch {
-            repository.insertUser(userData)
-        }
-    }
+//    fun userInit(userData: UserData) {
+//        viewModelScope.launch {
+//            repository.insertUser(userData)
+//        }
+//    }
 
     fun checkInfo(id: String, passwd: String): Boolean {
-        Log.d("Repository", "Checking info for user ID: $id")
+        Log.d("Repository","로그인\n${UserList}")
         val result = UserList.any { user -> user.UserId == id && user.UserPw == passwd }
         Log.d("Repository", "Login ${if (result) "successful" else "failed"} for user ID: $id")
         return result
@@ -264,13 +262,11 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
     }
     fun addUser(userData: UserData) {
         UserList.add(userData)
-        Log.d("Repository","${UserList}")
-        viewModelScope.launch {
-            repository.insertUser(userData)
-        }
-
+        Log.d("Repository","회원가입\n${UserList}")
+//        viewModelScope.launch {
+//            repository.insertUser(userData)
+//        }
     }
-
 
 
     ///////////////////////////////////////////////////////관리자용 함수

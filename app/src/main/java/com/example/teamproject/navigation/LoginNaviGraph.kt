@@ -57,7 +57,7 @@ fun LoginNavGraph(navController: NavHostController) {
 //            Favorites()
 //        }
             composable(NavRoutes.MainScreen.route){
-                MainScreen()
+                MainScreen(navController)
             }
             composable(NavRoutes.MasterScreen.route){
                 MasterScreen(navController)

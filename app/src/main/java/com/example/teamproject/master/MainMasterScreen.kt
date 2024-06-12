@@ -35,7 +35,11 @@ fun MainMasterScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = { navController.navigate(NavRoutes.Login.route) },
+            onClick = {
+                navController.navigate(NavRoutes.Login.route) {
+                    popUpTo(NavRoutes.MainMasterScreen.route) { inclusive = true }
+                }
+            },
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(8.dp),

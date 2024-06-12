@@ -1,13 +1,16 @@
 package com.example.teamproject.screen.loginscreen
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -36,8 +40,7 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun Register(navController: NavHostController) {
     val table = Firebase.database.getReference("UserDB/Users")
-    val userViewModel: UserViewModel = viewModel(
-        factory = UserViewModelFactory(Repository(table)),
+    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
         viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
     var userID by remember { mutableStateOf("") }
@@ -47,7 +50,10 @@ fun Register(navController: NavHostController) {
     var dialogMessage by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xF7EEDF1))
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -85,34 +91,64 @@ fun Register(navController: NavHostController) {
             label = { Text("닉네임") }
         )
 
-        Button(onClick = {
-            if (userViewModel.UserList.any { it.UserId == userID }) {
-                dialogMessage = "아이디가 이미 존재합니다."
-                showDialog = true
-            } else if (userPasswd.length < 7 || !userPasswd.any { !it.isLetterOrDigit() }) {
-                dialogMessage = "비밀번호는 7자리 이상이어야 하며, 적어도 하나의 특수 문자를 포함해야 합니다."
-                showDialog = true
-            } else {
-                val newUser = UserData(
-                    UserId = userID,
-                    UserPw = userPasswd,
-                    UserName = userName,
-                    isMaster = false,
-                    favoriteLocation = mutableListOf(),
-                    friendList = mutableListOf(), mutableListOf(), mutableListOf()
-                )
-                userViewModel.addUser(newUser)
-                navController.navigate(NavRoutes.Login.route)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Button(onClick = {
+                if (userViewModel.UserList.any { it.UserId == userID }) {
+                    dialogMessage = "아이디가 이미 존재합니다."
+                    showDialog = true
+                } else if (userPasswd.length < 7 || !userPasswd.any { !it.isLetterOrDigit() }) {
+                    dialogMessage = "비밀번호는 7자리 이상이어야 하며, 적어도 하나의 특수 문자를 포함해야 합니다."
+                    showDialog = true
+                } else {
+                    val newUser = UserData(
+                        UserId = userID,
+                        UserPw = userPasswd,
+                        UserName = userName,
+                        isMaster = false,
+                        favoriteLocation = mutableListOf(),
+                        friendList = mutableListOf(), mutableListOf(), mutableListOf()
+                    )
+                    userViewModel.addUser(newUser)
+                    navController.navigate(NavRoutes.Login.route)
+                }
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text("가입하기")
             }
-        }) {
-            Text("가입하기")
-        }
 
-        Button(onClick = {
-            navController.navigate(NavRoutes.Login.route)
-        }) {
-            Text("취소하기")
+            Button(onClick = {
+                navController.navigate(NavRoutes.Login.route)
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text("취소하기")
+            }
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "오류") },
+            text = { Text(text = dialogMessage) },
+            confirmButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("확인")
+                }
+            }
+        )
     }
 
     if (showDialog) {

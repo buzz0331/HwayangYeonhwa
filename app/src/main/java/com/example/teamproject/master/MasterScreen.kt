@@ -56,11 +56,11 @@ fun MasterScreen(navController: NavController) {
     ) {
         TopAppBar(
             title = {
-                Text(text = "사용자 승인 창", fontSize = 24.sp, color = Color.Black)
+                Text(text = "장소 승인창", fontSize = 24.sp, color = Color.Black)
             },
             navigationIcon = {
                 IconButton(onClick = {
-                    navController.navigate("MainMasterScreen")
+                    navController.navigate(NavRoutes.MainMasterScreen.route)
                     { popUpTo(NavRoutes.MainMasterScreen.route) { inclusive = true } }
                 }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")

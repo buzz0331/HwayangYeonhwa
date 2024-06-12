@@ -1,15 +1,17 @@
 package com.example.teamproject.screen.mainscreen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -18,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.teamproject.navigation.NavRoutes
@@ -25,7 +28,7 @@ import com.example.teamproject.navigation.NavigationHost
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(navControllerr: NavController) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -52,13 +55,23 @@ fun MainScreen() {
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        // 로그아웃 로직 추가
-                    }, modifier = Modifier.width(100.dp)) {
-                        Text(text = "로그아웃", color = Color.Blue)
+                    Button(
+                        onClick = {
+                            navControllerr.navigate(NavRoutes.Login.route){
+                                popUpTo(NavRoutes.MainScreen.route) { inclusive = true }
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(8.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(text = "로그아웃")
                     }
-                },
-                modifier = Modifier.background(Color(0xFF6200EA)) // 원하는 색상으로 변경
+                }
             )
         },
         bottomBar = {

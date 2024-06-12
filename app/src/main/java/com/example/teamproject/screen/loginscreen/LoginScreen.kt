@@ -111,7 +111,7 @@ fun LoginScreen(navController: NavHostController) {
                     Log.d("Repository", "Login result: $loginResult")
 
                     if(userViewModel.checkMaster(userID,userPasswd)){
-                        navController.navigate(NavRoutes.MasterScreen.route)
+                        navController.navigate(NavRoutes.MainMasterScreen.route)
                     } else if (loginResult) {
                         Log.d("Repository","${userViewModel.UserList}")
                         userViewModel.setUser(userID)
@@ -146,7 +146,7 @@ fun LoginScreen(navController: NavHostController) {
                 Log.d("Repository", "Login result: $loginResult")
 
                 if(userViewModel.checkMaster(userID,userPasswd)){
-                    navController.navigate(NavRoutes.MasterScreen.route)
+                    navController.navigate(NavRoutes.MainMasterScreen.route)
                 } else if (loginResult) {
                     Log.d("Repository","${userViewModel.UserList}")
                     userViewModel.setUser(userID)

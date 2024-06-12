@@ -9,11 +9,13 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.teamproject.screen.mainscreen.BottomNavigationBar
-import com.example.teamproject.screen.mainscreen.MainScreen
+import com.example.teamproject.master.MainMasterScreen
 import com.example.teamproject.master.MasterScreen
+import com.example.teamproject.master.MasterScreen2
 import com.example.teamproject.screen.loginscreen.LoginScreen
 import com.example.teamproject.screen.loginscreen.Register
+import com.example.teamproject.screen.mainscreen.BottomNavigationBar
+import com.example.teamproject.screen.mainscreen.MainScreen
 
 @Composable
 fun rememberViewModelStoreOwner(): ViewModelStoreOwner {
@@ -58,7 +60,13 @@ fun LoginNavGraph(navController: NavHostController) {
                 MainScreen()
             }
             composable(NavRoutes.MasterScreen.route){
-                MasterScreen()
+                MasterScreen(navController)
+            }
+            composable(NavRoutes.MasterScreen2.route){
+                MasterScreen2(navController)
+            }
+            composable(NavRoutes.MainMasterScreen.route){
+                MainMasterScreen(navController)
             }
 //        composable(NavRoutes.ReviewScreen.route){
 //            ReviewScreen(navController)

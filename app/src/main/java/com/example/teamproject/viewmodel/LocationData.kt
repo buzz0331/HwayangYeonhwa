@@ -7,16 +7,25 @@ data class LocationData(
     var isAccepted: Boolean = false,
     var review : String,
     var imageUrl:String,
-    var PosReview: MutableList<Int>?, //
-    var NegReview: MutableList<Int>?
+    var PosReview: MutableList<MutableList<String>>? = MutableList(6){mutableListOf()}, //
+    var NegReview: MutableList<MutableList<String>>? = MutableList(6){mutableListOf()}
 ){
-    fun updatePosReview(index: Int) {
-        PosReview?.set(index, 1)
+    fun updatePosReview(index: Int, userID: String) {
+        PosReview?.get(index)?.let { reviewList ->
+            if (userID in reviewList) {
+                reviewList.remove(userID)
+            } else {
+                reviewList.add(userID)
+            }
+        }
     }
-
-    fun updataNegReview(index: Int){
-        NegReview?.set(index, 1)
+    fun updateNegReview(index: Int, userID: String) {
+        NegReview?.get(index)?.let { reviewList ->
+            if (userID in reviewList) {
+                reviewList.remove(userID)
+            } else {
+                reviewList.add(userID)
+            }
+        }
     }
-
-
 }

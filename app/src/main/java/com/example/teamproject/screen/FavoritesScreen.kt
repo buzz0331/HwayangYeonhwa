@@ -12,13 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.teamproject.navigation.NavRoutes
 import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
+import com.example.teamproject.screen.locationscreen.PlaceList
+import com.example.teamproject.viewmodel.LocationData
 import com.example.teamproject.viewmodel.Repository
 import com.example.teamproject.viewmodel.UserData
 import com.example.teamproject.viewmodel.UserViewModel
 import com.example.teamproject.viewmodel.UserViewModelFactory
-import com.example.teamproject.viewmodel.LocationData
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -36,10 +36,7 @@ fun FavoritesScreen(navController: NavController) {
         .fillMaxWidth()){
 
         Text("${userData.UserName}님의 선호 장소 목록")
-        FavoritesList(userData) {locationData->
-            navController.navigate(NavRoutes.PlaceInfoScreen.route)
-
-        }
+        PlaceList(navController = navController, choice = 1)
     }
 }
 

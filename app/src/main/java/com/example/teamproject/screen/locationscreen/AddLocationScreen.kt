@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -61,6 +63,9 @@ fun AddLocationScreen(navController: NavController) {
     ) { uri: Uri? ->
         menuImageUri = uri
     }
+
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -138,7 +143,7 @@ fun AddLocationScreen(navController: NavController) {
         Button(
             onClick = {
                 // 장소 등록 로직
-                if (placeName.isNotEmpty() && selectedCategory.isNotEmpty() && location.isNotEmpty()) {
+                if (placeName.isNotEmpty() && selectedCategory.isNotEmpty() && location.isNotEmpty() && review.isNotEmpty()) {
                     val newLocation = LocationData(
                         Category = when (selectedCategory) {
                             "음식점" -> 1
@@ -147,7 +152,7 @@ fun AddLocationScreen(navController: NavController) {
                         },
                         Name = placeName,
                         ID = navViewModel.LocationList.size + 1,
-                        isAccepted = true,
+                        isAccepted = false,
                         imageUrl = "",
                         review = review,
                         PosReview = mutableListOf(),
@@ -158,12 +163,33 @@ fun AddLocationScreen(navController: NavController) {
                     menuImageUri?.let { newLocation.imageUrl += "|${it.toString()}" }
 
                     navViewModel.addLocation(newLocation)
-                    navController.popBackStack()
+                    dialogMessage = "장소가 추가되었습니다. 관리장 승인 후 확인할 수 있습니다"
+                    placeName = ""
+                    selectedCategory = ""
+                    location = ""
+                    review = ""
+                    imageUri = null
+                    menuImageUri = null
+                } else {
+                    dialogMessage = "정보를 전부 입력해주세요"
                 }
+                showDialog = true
             },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("등록")
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showDialog = false }) {
+                        Text("확인")
+                    }
+                },
+                text = { Text(dialogMessage) }
+            )
         }
     }
 }

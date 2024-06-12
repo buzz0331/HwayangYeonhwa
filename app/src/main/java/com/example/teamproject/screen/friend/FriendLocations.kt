@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
-import com.example.teamproject.navigation.NavRoutes
+import com.example.teamproject.screen.locationscreen.PlaceList
 import com.example.teamproject.viewmodel.Repository
 import com.example.teamproject.viewmodel.UserViewModel
 import com.example.teamproject.viewmodel.UserViewModelFactory
@@ -25,18 +25,15 @@ fun FriendLocations(navController: NavController) {
     val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
         viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
-    val userData by remember {
+    val friendData by remember {
         navViewModel.friend // 수정필요
     }
 
     Column (modifier = Modifier
         .fillMaxWidth()){
 
-        Text("${userData.UserName}님의 선호 장소 목록")
-        FavoritesList(userData) {locationData->
-            navController.navigate(NavRoutes.PlaceInfoScreen.route)
-
-        }
+        Text("${friendData.UserName}님의 선호 장소 목록")
+        PlaceList(navController = navController, choice = 2)
     }
 }
 

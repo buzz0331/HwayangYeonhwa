@@ -13,6 +13,7 @@ sealed class NavRoutes (val route: String) {
     object PlaceInfoScreen: NavRoutes("PlaceInfoScreen")
     object AddLocationScreen: NavRoutes("AddLocationScreen")
     object MasterScreen: NavRoutes("MasterScreen")
+    object MasterScreen2: NavRoutes("MasterScreen2")
+    object MainMasterScreen: NavRoutes("MainMasterScreen")
     object FriendLocations: NavRoutes("FriendLocations")
-
 }

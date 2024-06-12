@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.teamproject.screen.locationscreen.PlaceList
-import com.example.teamproject.navigation.NavRoutes
 import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
+import com.example.teamproject.navigation.NavRoutes
+import com.example.teamproject.screen.locationscreen.PlaceList
 import com.example.teamproject.viewmodel.Repository
 import com.example.teamproject.viewmodel.UserViewModel
 import com.example.teamproject.viewmodel.UserViewModelFactory
@@ -32,6 +32,6 @@ fun Home(navController: NavController) {
         Button(onClick = { navController.navigate(NavRoutes.AddLocationScreen.route) }) {
             Text(text = "장소 추가하기")
         }
-        PlaceList(navController = navController)
+        PlaceList(navController = navController,0)
     }
 }

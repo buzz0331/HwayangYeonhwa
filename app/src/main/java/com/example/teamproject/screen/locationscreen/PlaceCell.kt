@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -39,32 +42,64 @@ fun PlaceCell(location_data: LocationData, navController: NavController) {
 
     val showButtons = remember { mutableStateOf(false) }
 
+    val isFavorite = remember {
+        mutableStateOf(navViewModel.User.value.favoriteLocation?.any { it.ID == location_data.ID } == true)
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Box(
-            modifier = Modifier.height(50.dp).fillMaxWidth()
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
                 .border(width = 4.dp, color = Color.Black)
                 .clickable { showButtons.value = !showButtons.value },
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = location_data.Name,
-                fontSize = 30.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = location_data.Name,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    tint = if (isFavorite.value) Color.Yellow else Color.Black,
+                    contentDescription = if (isFavorite.value) "Favorite" else "Not Favorite",
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .clickable {
+                            if (isFavorite.value) {
+                                navViewModel.removeFavoriteLocation(location_data)
+                            } else {
+                                navViewModel.addFavoriteLocation(location_data)
+                            }
+                            isFavorite.value = !isFavorite.value
+                        }
+                )
+            }
         }
         if (showButtons.value) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
                     onClick = {
                         navViewModel.setLocation(location_data.ID)
                         navController.navigate(NavRoutes.PlaceInfoScreen.route)
-                              },
-                    modifier = Modifier.weight(1f).padding(end = 4.dp)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 4.dp)
                 ) {
                     Text(text = "상세 정보 보기")
                 }
@@ -72,8 +107,10 @@ fun PlaceCell(location_data: LocationData, navController: NavController) {
                     onClick = {
                         navViewModel.setLocation(location_data.ID)
                         navController.navigate(NavRoutes.ReviewScreen.route)
-                              },
-                    modifier = Modifier.weight(1f).padding(start = 4.dp)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp)
                 ) {
                     Text(text = "후기 보기")
                 }

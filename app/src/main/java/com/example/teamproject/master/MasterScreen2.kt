@@ -33,8 +33,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
 import com.example.teamproject.navigation.NavRoutes
-import com.example.teamproject.viewmodel.LocationData
 import com.example.teamproject.viewmodel.Repository
+import com.example.teamproject.viewmodel.UserData
 import com.example.teamproject.viewmodel.UserViewModel
 import com.example.teamproject.viewmodel.UserViewModelFactory
 import com.google.firebase.database.ktx.database
@@ -42,12 +42,12 @@ import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MasterScreen(navController: NavController) {
+fun MasterScreen2(navController: NavController) {
     val table = Firebase.database.getReference("UserDB/Users")
     val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
         viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
-    val locations by remember { mutableStateOf(userViewModel.LocationList) }
+    val users by remember { mutableStateOf(userViewModel.UserList) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -56,7 +56,7 @@ fun MasterScreen(navController: NavController) {
     ) {
         TopAppBar(
             title = {
-                Text(text = "사용자 승인 창", fontSize = 24.sp, color = Color.Black)
+                Text(text = "사용자 관리", fontSize = 24.sp, color = Color.Black)
             },
             navigationIcon = {
                 IconButton(onClick = {
@@ -67,21 +67,19 @@ fun MasterScreen(navController: NavController) {
                 }
             }
         )
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(locations.filter { !it.isAccepted }) { location ->
-                ExpandableItemCard(location,
-                    onApprove = { loc ->
-                        userViewModel.approveLocation(loc)
-                        navController.navigate("MainMasterScreen") { popUpTo("MainMasterScreen") { inclusive = true } }
-                    },
-                    onReject = { loc ->
-                        userViewModel.rejectLocation(loc)
-                        navController.navigate("MainMasterScreen") { popUpTo("MainMasterScreen") { inclusive = true } }
+            items(users.filter { !it.isMaster }) { user ->
+                ExpandableUserCard(user,
+                    onReject = { usr ->
+                        userViewModel.rejectUser(usr)
+                        navController.navigate("MainMasterScreen")
+                        { popUpTo("MainMasterScreen") { inclusive = true } }
                     }
                 )
             }
@@ -91,10 +89,9 @@ fun MasterScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableItemCard(
-    location: LocationData,
-    onApprove: (LocationData) -> Unit,
-    onReject: (LocationData) -> Unit
+fun ExpandableUserCard(
+    user: UserData,
+    onReject: (UserData) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -107,9 +104,9 @@ fun ExpandableItemCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = location.Name, fontSize = 18.sp)
+            Text(text = user.UserName, fontSize = 18.sp)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = location.review, color = Color.Gray)
+            Text(text = "ID: ${user.UserId}", color = Color.Gray)
 
             if (expanded) {
                 Column(
@@ -119,22 +116,13 @@ fun ExpandableItemCard(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Button(
-                            modifier = Modifier.align(Alignment.CenterStart),
-                            onClick = {
-                                onApprove(location)
-                                expanded = false
-                            }
-                        ) {
-                            Text(text = "승인하기")
-                        }
-                        Button(
                             modifier = Modifier.align(Alignment.CenterEnd),
                             onClick = {
-                                onReject(location)
+                                onReject(user)
                                 expanded = false
                             }
                         ) {
-                            Text(text = "거절하기")
+                            Text(text = "삭제하기")
                         }
                     }
                 }

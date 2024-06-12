@@ -81,10 +81,10 @@ fun LoginScreen(navController: NavHostController) {
                 Log.d("Repository", "Login result: $loginResult")
 
                 if(userViewModel.checkMaster(userID,userPasswd)){
-                    navController.navigate(NavRoutes.MasterScreen.route)
+                    navController.navigate(NavRoutes.MainMasterScreen.route)
                 } else if (loginResult) {
                     Log.d("Repository","${userViewModel.UserList}")
-                    userViewModel.setUser("user")
+                    userViewModel.setUser(userID)
                     navController.navigate(NavRoutes.MainScreen.route)
                 } else {
                     showAlertDialog = true

@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PlaceList(navController: NavController) {
+fun PlaceList(navController: NavController,choice: Int) {
     val table = Firebase.database.getReference("UserDB/Users")
     val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
         viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
@@ -55,7 +55,13 @@ fun PlaceList(navController: NavController) {
         }
     }
 
-    val groupedLocations = navViewModel.LocationList.groupBy { it.Category }
+    val groupedLocations = when(choice){
+        0->navViewModel.LocationList.groupBy { it.Category }
+        1->navViewModel.user_locations.groupBy { it.Category }
+        2->navViewModel.friend_locations.groupBy { it.Category }
+        else->navViewModel.LocationList.groupBy { it.Category }
+    }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(

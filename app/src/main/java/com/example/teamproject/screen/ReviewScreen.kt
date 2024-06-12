@@ -62,33 +62,38 @@ fun ReviewScreen(navController: NavController) {
 @Composable
 fun ReviewPosList(locationData: LocationData, reviewCounter: Int, userID: String, onPosReviewClick: (Int) -> Unit) {
     var color: Int
-    LazyColumn {
-        locationData.PosReview?.let {
-            items(it.size) { index ->
-                (locationData.PosReview?.get(index) ?: null)?.let {
-                    if(it.contains(userID))
-                        color = 2
+
+    locationData.PosReview?.let { posReviews ->
+        val indexedReviews = posReviews.mapIndexed { index, review ->
+            index to review
+        }.sortedByDescending { it.second.size }
+
+        LazyColumn {
+            items(indexedReviews.size) { sortedIndex ->
+                val (originalIndex, review) = indexedReviews[sortedIndex]
+                if (review.contains(userID))
+                    color = 2
+                else
+                    color = 1
+
+                ReviewItem(
+                    review =
+                    if (originalIndex == 0)
+                        "가게가 더러워요"
+                    else if (originalIndex == 1)
+                        "음식이 상했어요"
+                    else if (originalIndex == 2)
+                        "서비스가 안좋아요"
+                    else if (originalIndex == 3)
+                        "리뷰4"
+                    else if (originalIndex == 4)
+                        "리뷰5"
                     else
-                        color = 1
-                    ReviewItem(
-                        review =
-                        if (index == 0)
-                            "가게가 깨끗해요"
-                        else if (index == 1)
-                            "음식이 맛있어요"
-                        else if (index == 2)
-                            "직원이 친절해요"
-                        else if (index == 3)
-                            "리뷰4"
-                        else if (index == 4)
-                            "리뷰5"
-                        else
-                            "리뷰6",
-                        it.size,
-                        color,
-                        onClick = { onPosReviewClick(index) }
-                    )
-                }
+                        "리뷰6",
+                    review.size,
+                    color,
+                    onClick = { onPosReviewClick(originalIndex) }
+                )
             }
         }
     }
@@ -97,33 +102,40 @@ fun ReviewPosList(locationData: LocationData, reviewCounter: Int, userID: String
 @Composable
 fun ReviewNegList(locationData: LocationData, reviewCounter: Int, userID: String, onNegReviewClick: (Int) -> Unit) {
     var color: Int
-    LazyColumn {
-        locationData.NegReview?.let {
-            items(it.size) { index ->
-                (locationData.NegReview?.get(index) ?: null)?.let {
-                    if(it.contains(userID))
-                        color = 3
+
+    // NegReview가 null이 아니고 요소가 있는 경우 처리
+    locationData.NegReview?.let { negReviews ->
+        // 인덱스와 함께 요소를 리스트로 만든 후, 크기 순으로 정렬
+        val indexedReviews = negReviews.mapIndexed { index, review ->
+            index to review
+        }.sortedByDescending { it.second.size }
+
+        LazyColumn {
+            items(indexedReviews.size) { sortedIndex ->
+                val (originalIndex, review) = indexedReviews[sortedIndex]
+                if (review.contains(userID))
+                    color = 3
+                else
+                    color = 1
+
+                ReviewItem(
+                    review =
+                    if (originalIndex == 0)
+                        "가게가 더러워요"
+                    else if (originalIndex == 1)
+                        "음식이 상했어요"
+                    else if (originalIndex == 2)
+                        "서비스가 안좋아요"
+                    else if (originalIndex == 3)
+                        "리뷰4"
+                    else if (originalIndex == 4)
+                        "리뷰5"
                     else
-                        color = 1
-                    ReviewItem(
-                        review =
-                        if (index == 0)
-                            "가게가 더러워요"
-                        else if (index == 1)
-                            "음식이 상했어요"
-                        else if (index == 2)
-                            "서비스가 안좋아요"
-                        else if (index == 3)
-                            "리뷰4"
-                        else if (index == 4)
-                            "리뷰5"
-                        else
-                            "리뷰6",
-                        it.size,
-                        color,
-                        onClick = { onNegReviewClick(index) }
-                    )
-                }
+                        "리뷰6",
+                    review.size,
+                    color,
+                    onClick = { onNegReviewClick(originalIndex) }
+                )
             }
         }
     }

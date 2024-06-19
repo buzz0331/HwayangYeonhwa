@@ -23,7 +23,7 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
     var LocationList = mutableListOf<LocationData>()
     //현재 로그인 중인 user 정보
     var User = mutableStateOf<UserData>(UserData("","","", false,null, null, mutableListOf(), mutableListOf()))
-    var Location = mutableStateOf<LocationData>(LocationData(0,"",0,false,"","","",null,null,0.0,0.0))
+    var Location = mutableStateOf<LocationData>(LocationData(0,"",0,false,"","","",null,null,null))
     var user_locations = mutableStateListOf<LocationData>()
     var friend_locations = mutableStateListOf<LocationData>()
     var friendList = mutableStateListOf<UserData>()

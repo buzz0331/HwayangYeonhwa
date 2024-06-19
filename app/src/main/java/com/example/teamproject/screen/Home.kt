@@ -43,6 +43,7 @@ fun Home(navController: NavController) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom((konkuk), 16f)
     }
+    val locations = navViewModel.LocationList
 
     Column(
         modifier = Modifier
@@ -54,9 +55,18 @@ fun Home(navController: NavController) {
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState
             ) {
+                locations.forEach{location ->
+                    val position = location.Location?.let { LatLng(it.latitude, it.longitude) }
+                    position?.let { MarkerState(position = it) }?.let {
+                        Marker(
+                            state = it,
+                            title = location.Name
+                        )
+                    }
+                }
                 Marker(
                     state = MarkerState(position = konkuk),
-                    title = "Marker in Sydney"
+                    title = "건국대학교"
                 )
             }
         }

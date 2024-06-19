@@ -1,17 +1,13 @@
 package com.example.teamproject.screen.locationscreen
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,15 +16,13 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.teamproject.navigation.LocalNavGraphViewModelStoreOwner
@@ -36,9 +30,18 @@ import com.example.teamproject.viewmodel.LocationData
 import com.example.teamproject.viewmodel.Repository
 import com.example.teamproject.viewmodel.UserViewModel
 import com.example.teamproject.viewmodel.UserViewModelFactory
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+@ExperimentalPermissionsApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddLocationScreen(navController: NavController) {
@@ -48,7 +51,9 @@ fun AddLocationScreen(navController: NavController) {
 
     var placeName by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf<LatLng?>(null)}
+    var latitude by remember { mutableStateOf("")}
+    var longitude by remember { mutableStateOf("")}
     var review by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var menuImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -69,9 +74,42 @@ fun AddLocationScreen(navController: NavController) {
     var showDialog by remember { mutableStateOf(false) }
     var dialogMessage by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    val context = LocalContext.current
+    val fusedLocationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    val permissionState = rememberMultiplePermissionsState(
+        permissions =
+        listOf(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    )
+
+    LaunchedEffect(Unit) {
+        permissionState.launchMultiplePermissionRequest()
+    }
+
+    val finePermission =
+        permissionState.permissions[0].status.isGranted
+    val coarsePermission =
+        permissionState.permissions[1].status.isGranted
+
+    LaunchedEffect(Unit) {
+        if (finePermission || coarsePermission) {
+            val fetchLocation = { pos: LatLng? -> location = pos }
+            getCurrentLocation(fusedLocationClient, fetchLocation)
+        }
+
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
         Text("장소 등록")
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -105,11 +143,38 @@ fun AddLocationScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = location,
-            onValueChange = { location = it },
-            label = { Text("위치") },
+            value = latitude,
+            onValueChange = { latitude = it },
+            label = { Text("위치(위도)") },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextField(
+            value = longitude,
+            onValueChange = { longitude = it },
+            label = { Text("위치(경도)") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(
+            onClick = {
+                if (location != null) {
+                    latitude = location!!.latitude.toString()
+                    longitude = location!!.longitude.toString()
+                } else {
+                    latitude = "0"
+                    longitude = "0"
+                }
+            },
+            modifier = Modifier.align(Alignment.Start),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF3F51B5),
+                contentColor = Color.White
+            )
+        ) {
+            Text("현재 위치 불러오기")
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -153,7 +218,7 @@ fun AddLocationScreen(navController: NavController) {
         Button(
             onClick = {
                 // 장소 등록 로직
-                if (placeName.isNotEmpty() && selectedCategory.isNotEmpty() && location.isNotEmpty() && review.isNotEmpty()) {
+                if (placeName.isNotEmpty() && selectedCategory.isNotEmpty() && latitude.isNotEmpty() && longitude.isNotEmpty() && review.isNotEmpty()) {
                     val newLocation = LocationData(
                         Category = when (selectedCategory) {
                             "음식점" -> 1
@@ -166,10 +231,9 @@ fun AddLocationScreen(navController: NavController) {
                         imageUrl = "",
                         review = review,
                         data = "",
-                        PosReview = MutableList(6){mutableListOf("")},
-                        NegReview = MutableList(6){mutableListOf("")},
-                        Latitude = 0.0,
-                        Longitude = 0.0
+                        PosReview = MutableList(6) { mutableListOf("") },
+                        NegReview = MutableList(6) { mutableListOf("") },
+                        Location = LatLng(latitude.toDouble(), longitude.toDouble())
                     )
                     // 사진 저장 로직 추가
                     imageUri?.let { newLocation.imageUrl = it.toString() }
@@ -179,7 +243,8 @@ fun AddLocationScreen(navController: NavController) {
                     dialogMessage = "장소가 추가되었습니다. 관리장 승인 후 확인할 수 있습니다"
                     placeName = ""
                     selectedCategory = ""
-                    location = ""
+                    latitude = ""
+                    longitude = ""
                     review = ""
                     imageUri = null
                     menuImageUri = null
@@ -208,5 +273,21 @@ fun AddLocationScreen(navController: NavController) {
                 text = { Text(dialogMessage) }
             )
         }
+    }
+}
+
+@SuppressLint("MissingPermission")
+fun getCurrentLocation(
+    fusedLocationClient: FusedLocationProviderClient,
+    fetchLocation: (LatLng?) -> Unit
+) {
+    fusedLocationClient.getCurrentLocation(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        CancellationTokenSource().token
+    ).addOnSuccessListener {
+        if (it != null)
+            fetchLocation(LatLng(it.latitude, it.longitude))
+        else
+            fetchLocation(null)
     }
 }

@@ -12,8 +12,10 @@ import com.example.teamproject.screen.ReviewScreen
 import com.example.teamproject.screen.friend.ContactsScreen
 import com.example.teamproject.screen.locationscreen.AddLocationScreen
 import com.example.teamproject.screen.locationscreen.PlaceInfoScreen
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NavigationHost(navController: NavHostController) {
     val navStoreOwner = rememberViewModelStoreOwner()

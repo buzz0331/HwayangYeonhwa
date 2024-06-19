@@ -108,6 +108,9 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
             if(user.UserId == id)
                 return user
         }
+        viewModelScope.launch {
+            User.value = repository.getUser(id)   !!
+        }
         return null
     }
 
@@ -172,6 +175,13 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
         LocationList[locationIndex] = locationData // 객체를 업데이트하고 다시 리스트에 할당
     }
 
+    fun fetchFriendList(userId: String) {
+        viewModelScope.launch {
+            val friends = repository.getFriendList(userId)
+            friendList.clear()
+            friendList.addAll(friends)
+        }
+    }
     ///////////////////////////////////////////////////////실시간으로 변경되는 애들(user의 선택에 따라)
 
     fun setUser(id: String) {
@@ -184,7 +194,7 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
                 sentFriendRequests.addAll(user.sentFriendRequests ?: listOf())
             }
         }
-        setFriendList(User)
+        fetchFriendList(id)
         setUserLocations(User)
     }
     fun setLocation(id: Int){
@@ -198,13 +208,10 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
 
     fun setFriendList(user: MutableState<UserData>){
         //로그인시 로그인한 user의 모든 friend의 userdata를 불러
-        friendList.clear() // 기존의 friendList를 초기화합니다.
-
-        user.value.friendList?.forEach { friendId ->
-            val friendData = getUser(friendId)
-            if (friendData != null) {
-                friendList.add(friendData)
-            }
+        viewModelScope.launch {
+            val friends = repository.getFriendList(user.value.UserId)
+            friendList.clear()
+            friendList.addAll(friends)
         }
     }
 

@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +57,11 @@ fun PlaceCell(location_data: LocationData, navController: NavController) {
                 .padding(vertical = 4.dp, horizontal = 8.dp)
                 .height(40.dp)
                 .fillMaxWidth()
+                .graphicsLayer {
+                    shadowElevation = 8.dp.toPx()
+                    shape = RoundedCornerShape(25.dp)
+                    clip = true
+                }
                 .background(Color(0xFFDDE2FF), shape = RoundedCornerShape(25.dp))
                 .clickable { showButtons.value = !showButtons.value },
             contentAlignment = Alignment.Center

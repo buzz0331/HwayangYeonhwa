@@ -37,6 +37,23 @@ class Repository(private val table: DatabaseReference) {
         table.child("Users").child(userData.UserId).setValue(userData)
     }
 
+    suspend fun getUser(userId: String): UserData? {
+        val snapshot = table.child("Users").child(userId).get().await()
+        return snapshot.getValue(UserData::class.java)
+    }
+    suspend fun getFriendList(userId: String): List<UserData> {
+        val snapshot = table.child("Users").child(userId).child("friendList").get().await()
+        val friendIds = snapshot.children.mapNotNull { it.getValue(String::class.java) }
+
+        val friends = mutableListOf<UserData>()
+        for (friendId in friendIds) {
+            val friendSnapshot = table.child("Users").child(friendId).get().await()
+            val friend = friendSnapshot.getValue(UserData::class.java)
+            friend?.let { friends.add(it) }
+        }
+        return friends
+    }
+
     fun updateUser(userData: UserData) {
         table.child("Users").child(userData.UserId).setValue(userData)
     }

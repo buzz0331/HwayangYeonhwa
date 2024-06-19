@@ -1,5 +1,7 @@
 package com.example.teamproject.screen
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -22,6 +25,11 @@ import com.example.teamproject.viewmodel.UserViewModel
 import com.example.teamproject.viewmodel.UserViewModelFactory
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.Marker
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.CameraPosition
 
 @Composable
 fun Home(navController: NavController) {
@@ -29,13 +37,26 @@ fun Home(navController: NavController) {
     val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
         viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
+    val context = LocalContext.current
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(LatLng(-34.0, 151.0), 10f)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF6FAFE))
     ) {
-        Column(modifier = Modifier.height(300.dp)){
-            //map 놓는 곳
+        Column(modifier = Modifier.height(300.dp)) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState
+            ) {
+                Marker(
+
+                    title = "Marker in Sydney"
+                )
+            }
         }
         Button(
             onClick = { navController.navigate(NavRoutes.AddLocationScreen.route) },

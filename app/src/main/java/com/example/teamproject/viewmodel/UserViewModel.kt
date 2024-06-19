@@ -114,6 +114,14 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
         return null
     }
 
+    fun getUserfromUserList(id:String): UserData? {
+        for(user in UserList){
+            if(user.UserId == id)
+                return user
+        }
+        return null
+    }
+
     fun deleteFriend(friendId: String) {
         // 현재 사용자에서 친구 삭제
         User.value.friendList?.remove(friendId)

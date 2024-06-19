@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -122,17 +124,25 @@ fun AddLocationScreen(navController: NavController) {
 
         Button(
             onClick = { launcher.launch("image/*") },
-            modifier = Modifier.align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF3F51B5),
+                contentColor = Color.White
+            )
         ) {
             Text("사진 추가")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (selectedCategory == "음식점") {
+        if (selectedCategory == "음식점" || selectedCategory == "카페") {
             Button(
                 onClick = { menuLauncher.launch("image/*") },
-                modifier = Modifier.align(Alignment.Start)
+                modifier = Modifier.align(Alignment.Start),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF3F51B5),
+                    contentColor = Color.White
+                )
             ) {
                 Text("메뉴 사진 추가")
             }
@@ -176,7 +186,11 @@ fun AddLocationScreen(navController: NavController) {
                 }
                 showDialog = true
             },
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier.align(Alignment.End),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF3F51B5),
+                contentColor = Color.White
+            )
         ) {
             Text("등록")
         }

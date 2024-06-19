@@ -35,7 +35,7 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
     init {
         viewModelScope.launch {
             initFunction()
-            initData()
+//            initData()
         }
 //        fetchUsersFromFirebase()
     }
@@ -321,55 +321,55 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
 
     ///////////////////////////////////////////////////////관리자용 함수
 
-    fun initData(){
-        val initialUsers = listOf(
-            UserData(
-                "master", "master", "master", true, mutableListOf(),
-                mutableListOf(), mutableListOf(), mutableListOf()
-            )
-        )
-
-        val initialLocations = listOf(
-            LocationData(
-                1, "맥도날드", 2, true,
-                "맥도날드는 전 세계적으로 유명한 패스트푸드 체인입니다.","햄버거",
-                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA4MDVfMTkx%2FMDAxNjkxMjQ2MTcxNzA3.Nm9x8Ew0StOv988Kk7ipffMK5Wu5xiBSp-pCLdvAJqog.lcYQp7KWATeF4QQgUoIuhhL05IWL80sRJk9_un6y6k0g.JPEG.rlduael22%2Foutput_1818454878.jpg&type=sc960_832|" +
-                        "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MjFfMjg1%2FMDAxNjg5ODkzOTA3MTcz.DSYIthVA4gJ307uPrezU8uW4-8aNG4J4hgxsOOLoww4g.9jY7Z9K0PLlI2FVV_1iGDKCh9lRqKslkT9SbKgqtaWYg.JPEG.sb2sb2%2FIMG_9614.jpg&type=sc960_832",
-                MutableList(6){mutableListOf("user")},
-                MutableList(6){mutableListOf("user")}
-            ),
-            LocationData(
-                2, "스타벅스", 3, true,
-                "스타벅스는 커피와 다양한 음료를 판매하는 카페입니다.","최고커피",
-                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA5MjVfMzMg%2FMDAxNjY0MDMxNjI5MjM1.gv6W4pJJe1cdCLdG4NcWWJlrJ-2ddKqo5OODDCLbGFkg.UbtC7C7Tq62v-lsuC7gZgtRFXuKNIm4f79bUubYp9EUg.JPEG.china_lab%2Fa5761d81e961691f21b676a8a61f8d75.jpeg&type=sc960_832",
-                MutableList(6){mutableListOf("user")},
-                MutableList(6){mutableListOf("user")}
-            ),
-            LocationData(
-                2, "메가커피", 4, false,
-                "메가커피는 다양한 커피 음료를 제공합니다.","가성비커피",
-                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA1MDNfMTc0%2FMDAxNzE0NzI2OTYxMjEx.rSDkm2roBpv7HnRYJQZPo1HA7f-hzUm0TSPZ8GBFR8Mg.yF7KRdeEEifa18ph5Xt065V5R1C4APYs-vuiXwFJ7U4g.JPEG%2F%25B8%25DE%25B0%25A1%25C3%25A2%25BE%25F7.jpg&type=sc960_832",
-                MutableList(6){mutableListOf("user")},
-                MutableList(6){mutableListOf("user")}
-            ),
-            LocationData(
-                3, "락볼링장", 5, true,
-                "락볼링장은 즐거운 볼링 체험을 제공합니다.","락볼링장",
-                "https://search.pstatic.net/common/?src=http%3A%2F%2Fimage.nmv.naver.net%2Fblog_2024_04_30_1117%2FehYRxR3ZB3_01.jpg&type=sc960_832",
-                MutableList(6){mutableListOf("user")},
-                MutableList(6){mutableListOf("user")}
-            )
-        )
-
-        initialUsers.forEach { user ->
-            repository.addUser(user)
-            UserList.add(user)
-        }
-
-        initialLocations.forEach { location ->
-            repository.addLocation(location)
-            LocationList.add(location)
-        }
+//    fun initData(){
+//        val initialUsers = listOf(
+//            UserData(
+//                "master", "master", "master", true, mutableListOf(),
+//                mutableListOf(), mutableListOf(), mutableListOf()
+//            )
+//        )
+//
+//        val initialLocations = listOf(
+//            LocationData(
+//                1, "맥도날드", 2, true,
+//                "맥도날드는 전 세계적으로 유명한 패스트푸드 체인입니다.","햄버거",
+//                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA4MDVfMTkx%2FMDAxNjkxMjQ2MTcxNzA3.Nm9x8Ew0StOv988Kk7ipffMK5Wu5xiBSp-pCLdvAJqog.lcYQp7KWATeF4QQgUoIuhhL05IWL80sRJk9_un6y6k0g.JPEG.rlduael22%2Foutput_1818454878.jpg&type=sc960_832|" +
+//                        "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MjFfMjg1%2FMDAxNjg5ODkzOTA3MTcz.DSYIthVA4gJ307uPrezU8uW4-8aNG4J4hgxsOOLoww4g.9jY7Z9K0PLlI2FVV_1iGDKCh9lRqKslkT9SbKgqtaWYg.JPEG.sb2sb2%2FIMG_9614.jpg&type=sc960_832",
+//                MutableList(6){mutableListOf("user")},
+//                MutableList(6){mutableListOf("user")}
+//            ),
+//            LocationData(
+//                2, "스타벅스", 3, true,
+//                "스타벅스는 커피와 다양한 음료를 판매하는 카페입니다.","최고커피",
+//                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA5MjVfMzMg%2FMDAxNjY0MDMxNjI5MjM1.gv6W4pJJe1cdCLdG4NcWWJlrJ-2ddKqo5OODDCLbGFkg.UbtC7C7Tq62v-lsuC7gZgtRFXuKNIm4f79bUubYp9EUg.JPEG.china_lab%2Fa5761d81e961691f21b676a8a61f8d75.jpeg&type=sc960_832",
+//                MutableList(6){mutableListOf("user")},
+//                MutableList(6){mutableListOf("user")}
+//            ),
+//            LocationData(
+//                2, "메가커피", 4, false,
+//                "메가커피는 다양한 커피 음료를 제공합니다.","가성비커피",
+//                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA1MDNfMTc0%2FMDAxNzE0NzI2OTYxMjEx.rSDkm2roBpv7HnRYJQZPo1HA7f-hzUm0TSPZ8GBFR8Mg.yF7KRdeEEifa18ph5Xt065V5R1C4APYs-vuiXwFJ7U4g.JPEG%2F%25B8%25DE%25B0%25A1%25C3%25A2%25BE%25F7.jpg&type=sc960_832",
+//                MutableList(6){mutableListOf("user")},
+//                MutableList(6){mutableListOf("user")}
+//            ),
+//            LocationData(
+//                3, "락볼링장", 5, true,
+//                "락볼링장은 즐거운 볼링 체험을 제공합니다.","락볼링장",
+//                "https://search.pstatic.net/common/?src=http%3A%2F%2Fimage.nmv.naver.net%2Fblog_2024_04_30_1117%2FehYRxR3ZB3_01.jpg&type=sc960_832",
+//                MutableList(6){mutableListOf("user")},
+//                MutableList(6){mutableListOf("user")}
+//            )
+//        )
+//
+//        initialUsers.forEach { user ->
+//            repository.addUser(user)
+//            UserList.add(user)
+//        }
+//
+//        initialLocations.forEach { location ->
+//            repository.addLocation(location)
+//            LocationList.add(location)
+//        }
         //초기화할때 사용하는 함수
 //        LocationList.add(
 //            LocationData(
@@ -479,6 +479,6 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
 //            )
 //        )
 
-    }
+//    }
 }
 

@@ -159,7 +159,7 @@ fun ReviewItem(review: String, counter: Int, color: Int, onClick: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("$review                $counter")
+            Text("$review                ${counter-1}")
             if (color == 2) {
                 Icon(
                     imageVector = Icons.Default.Check,

@@ -42,7 +42,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 @ExperimentalPermissionsApi
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddLocationScreen(navController: NavController) {
     val table = Firebase.database.getReference("UserDB/Users")
@@ -233,7 +232,8 @@ fun AddLocationScreen(navController: NavController) {
                         data = "",
                         PosReview = MutableList(6) { mutableListOf("") },
                         NegReview = MutableList(6) { mutableListOf("") },
-                        Location = LatLng(latitude.toDouble(), longitude.toDouble())
+                        Latitude = latitude.toDouble(),
+                        Longitude = longitude.toDouble()
                     )
                     // 사진 저장 로직 추가
                     imageUri?.let { newLocation.imageUrl = it.toString() }

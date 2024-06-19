@@ -23,6 +23,7 @@ import com.example.teamproject.screen.locationscreen.PlaceList
 import com.example.teamproject.viewmodel.Repository
 import com.example.teamproject.viewmodel.UserViewModel
 import com.example.teamproject.viewmodel.UserViewModelFactory
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.maps.android.compose.GoogleMap
@@ -35,11 +36,13 @@ import com.google.maps.android.compose.MarkerState
 @Composable
 fun Home(navController: NavController) {
     val table = Firebase.database.getReference("UserDB/Users")
-    val navViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(Repository(table)),
-        viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
+    val navViewModel: UserViewModel = viewModel(
+        factory = UserViewModelFactory(Repository(table)),
+        viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current
+    )
 
     val context = LocalContext.current
-    val konkuk = LatLng(37.5408,127.0793)
+    val konkuk = LatLng(37.5408, 127.0793)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom((konkuk), 16f)
     }
@@ -55,8 +58,8 @@ fun Home(navController: NavController) {
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState
             ) {
-                locations.forEach{location ->
-                    val position = location.Location?.let { LatLng(it.latitude, it.longitude) }
+                locations.forEach { location ->
+                    val position = LatLng(location.Latitude,location.Longitude)
                     position?.let { MarkerState(position = it) }?.let {
                         Marker(
                             state = it,
@@ -64,22 +67,23 @@ fun Home(navController: NavController) {
                         )
                     }
                 }
-                Marker(
-                    state = MarkerState(position = konkuk),
-                    title = "건국대학교"
-                )
+                    Marker(
+                        state = MarkerState(position = konkuk),
+                        title = "건국대학교"
+                    )
+                }
             }
+            Button(
+                onClick = { navController.navigate(NavRoutes.AddLocationScreen.route) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF3F51B5),
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(text = "장소 추가하기")
+            }
+            PlaceList(navController = navController, 0)
         }
-        Button(
-            onClick = { navController.navigate(NavRoutes.AddLocationScreen.route) },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3F51B5),
-                contentColor = Color.White
-            ),
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(text = "장소 추가하기")
-        }
-        PlaceList(navController = navController, 0)
     }
-}
+

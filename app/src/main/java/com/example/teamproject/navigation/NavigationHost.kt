@@ -15,6 +15,7 @@ import com.example.teamproject.screen.locationscreen.PlaceInfoScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 
+
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NavigationHost(navController: NavHostController) {

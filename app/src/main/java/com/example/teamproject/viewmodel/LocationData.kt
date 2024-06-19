@@ -12,9 +12,10 @@ data class LocationData(
     var imageUrl:String,
     var PosReview: MutableList<MutableList<String>>? = MutableList(6){mutableListOf()}, //
     var NegReview: MutableList<MutableList<String>>? = MutableList(6){mutableListOf()},
-    var Location: LatLng?
+    var Latitude: Double,
+    var Longitude: Double
 ){
-    constructor():this(1,"화양연화",0,true,"","","", MutableList(6){mutableListOf("user")}, MutableList(6){mutableListOf("user")},null)
+    constructor():this(1,"화양연화",0,true,"","","", MutableList(6){mutableListOf("user")}, MutableList(6){mutableListOf("user")},0.0,0.0)
     fun updatePosReview(index: Int, userID: String) {
         PosReview?.get(index)?.let { reviewList ->
             if (userID in reviewList) {

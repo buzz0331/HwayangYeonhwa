@@ -167,7 +167,9 @@ fun AddLocationScreen(navController: NavController) {
                         review = review,
                         data = "",
                         PosReview = MutableList(6){mutableListOf("")},
-                        NegReview = MutableList(6){mutableListOf("")}
+                        NegReview = MutableList(6){mutableListOf("")},
+                        Latitude = 0.0,
+                        Longitude = 0.0
                     )
                     // 사진 저장 로직 추가
                     imageUri?.let { newLocation.imageUrl = it.toString() }

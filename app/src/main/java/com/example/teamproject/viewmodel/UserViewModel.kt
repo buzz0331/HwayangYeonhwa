@@ -23,7 +23,7 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
     var LocationList = mutableListOf<LocationData>()
     //현재 로그인 중인 user 정보
     var User = mutableStateOf<UserData>(UserData("","","", false,null, null, mutableListOf(), mutableListOf()))
-    var Location = mutableStateOf<LocationData>(LocationData(0,"",0,false,"","","",null,null))
+    var Location = mutableStateOf<LocationData>(LocationData(0,"",0,false,"","","",null,null,0.0,0.0))
     var user_locations = mutableStateListOf<LocationData>()
     var friend_locations = mutableStateListOf<LocationData>()
     var friendList = mutableStateListOf<UserData>()
@@ -143,8 +143,13 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun setLocation(locationData: LocationData){
-
+    fun addUser(userData: UserData) {
+        UserList.add(userData)
+        Log.d("Repository","회원가입\n${UserList}")
+        repository.addUser(userData)
+//        viewModelScope.launch {
+//            repository.insertUser(userData)
+//        }
     }
 
     fun updateUser(user: UserData) {
@@ -183,13 +188,18 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
         LocationList[locationIndex] = locationData // 객체를 업데이트하고 다시 리스트에 할당
     }
 
-    fun fetchFriendList(userId: String) {
-        viewModelScope.launch {
-            val friends = repository.getFriendList(userId)
-            friendList.clear()
-            friendList.addAll(friends)
-        }
+    fun addFavoriteLocation(locationData: LocationData) {
+        User.value.favoriteLocation?.add(locationData)
+        setUserLocations(User)
+        updateUser(User.value)
     }
+
+    fun removeFavoriteLocation(locationData: LocationData) {
+        User.value.favoriteLocation?.removeIf { it.ID == locationData.ID }
+        setUserLocations(User)
+        updateUser(User.value)
+    }
+
     ///////////////////////////////////////////////////////실시간으로 변경되는 애들(user의 선택에 따라)
 
     fun setUser(id: String) {
@@ -222,6 +232,13 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
             friendList.addAll(friends)
         }
     }
+    fun fetchFriendList(userId: String) {
+        viewModelScope.launch {
+            val friends = repository.getFriendList(userId)
+            friendList.clear()
+            friendList.addAll(friends)
+        }
+    }
 
     fun setFriend(friend: UserData){
         //친구 리스트에서 친구 눌렀을때
@@ -245,18 +262,6 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
         friend.value.favoriteLocation?.forEach { locationData ->
             friend_locations.add(locationData)
         }
-    }
-
-    fun addFavoriteLocation(locationData: LocationData) {
-        User.value.favoriteLocation?.add(locationData)
-        setUserLocations(User)
-        updateUser(User.value)
-    }
-
-    fun removeFavoriteLocation(locationData: LocationData) {
-        User.value.favoriteLocation?.removeIf { it.ID == locationData.ID }
-        setUserLocations(User)
-        updateUser(User.value)
     }
 
     fun sendFriendRequest(friendId: String) {
@@ -312,25 +317,22 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
     fun approveLocation(location: LocationData, additionalData: String) {
         location.isAccepted = true
         location.data = additionalData
-
+        updateLocation(location)
     }
 
     fun rejectLocation(location: LocationData) {
         LocationList.remove(location)
+        viewModelScope.launch {
+            repository.deleteLocation(location.ID)
+        }
     }
 
 
     fun rejectUser(user: UserData) {
         UserList.remove(user)
-
-    }
-    fun addUser(userData: UserData) {
-        UserList.add(userData)
-        Log.d("Repository","회원가입\n${UserList}")
-        repository.addUser(userData)
-//        viewModelScope.launch {
-//            repository.insertUser(userData)
-//        }
+        viewModelScope.launch {
+            repository.deleteUser(user.UserId)
+        }
     }
 
 
@@ -385,7 +387,7 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
 //            repository.addLocation(location)
 //            LocationList.add(location)
 //        }
-        //초기화할때 사용하는 함수
+    //초기화할때 사용하는 함수
 //        LocationList.add(
 //            LocationData(
 //                1, "화양연화", 1, true,
@@ -496,4 +498,5 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
 
 //    }
 }
+
 

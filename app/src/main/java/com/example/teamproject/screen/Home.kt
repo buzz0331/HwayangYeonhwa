@@ -30,6 +30,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.Marker
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.MarkerState
 
 @Composable
 fun Home(navController: NavController) {
@@ -38,8 +39,9 @@ fun Home(navController: NavController) {
         viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
     val context = LocalContext.current
+    val konkuk = LatLng(37.5408,127.0793)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(-34.0, 151.0), 10f)
+        position = CameraPosition.fromLatLngZoom((konkuk), 16f)
     }
 
     Column(
@@ -53,7 +55,7 @@ fun Home(navController: NavController) {
                 cameraPositionState = cameraPositionState
             ) {
                 Marker(
-
+                    state = MarkerState(position = konkuk),
                     title = "Marker in Sydney"
                 )
             }

@@ -1,6 +1,6 @@
 package com.example.teamproject.screen.locationscreen
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,9 +53,10 @@ fun PlaceCell(location_data: LocationData, navController: NavController) {
     ) {
         Box(
             modifier = Modifier
-                .height(50.dp)
+                .padding(vertical = 4.dp, horizontal = 8.dp)
+                .height(40.dp)
                 .fillMaxWidth()
-                .border(width = 4.dp, color = Color.Black)
+                .background(Color(0xFFDDE2FF), shape = RoundedCornerShape(25.dp))
                 .clickable { showButtons.value = !showButtons.value },
             contentAlignment = Alignment.Center
         ) {
@@ -64,13 +67,14 @@ fun PlaceCell(location_data: LocationData, navController: NavController) {
             ) {
                 Text(
                     text = location_data.Name,
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(start = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = Color(0xFF3F51B5)
                 )
                 Icon(
                     imageVector = Icons.Default.Star,
-                    tint = if (isFavorite.value) Color.Yellow else Color.Black,
+                    tint = if (isFavorite.value) Color.Yellow else Color(0xFF3F51B5),
                     contentDescription = if (isFavorite.value) "Favorite" else "Not Favorite",
                     modifier = Modifier
                         .padding(end = 16.dp)
@@ -99,7 +103,12 @@ fun PlaceCell(location_data: LocationData, navController: NavController) {
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 4.dp)
+                        .padding(end = 4.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF3F51B5),
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(25.dp)
                 ) {
                     Text(text = "상세 정보 보기")
                 }
@@ -110,7 +119,12 @@ fun PlaceCell(location_data: LocationData, navController: NavController) {
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 4.dp)
+                        .padding(start = 4.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF3F51B5),
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(25.dp)
                 ) {
                     Text(text = "후기 보기")
                 }

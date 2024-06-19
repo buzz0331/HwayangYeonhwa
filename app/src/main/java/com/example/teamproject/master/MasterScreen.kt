@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -60,8 +61,9 @@ fun MasterScreen(navController: NavController) {
             },
             navigationIcon = {
                 IconButton(onClick = {
-                    navController.navigate(NavRoutes.MainMasterScreen.route)
-                    { popUpTo(NavRoutes.MainMasterScreen.route) { inclusive = true } }
+                    navController.navigate(NavRoutes.MainMasterScreen.route) {
+                        popUpTo(NavRoutes.MainMasterScreen.route) { inclusive = true }
+                    }
                 }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
@@ -75,8 +77,8 @@ fun MasterScreen(navController: NavController) {
         ) {
             items(locations.filter { !it.isAccepted }) { location ->
                 ExpandableItemCard(location,
-                    onApprove = { loc ->
-                        userViewModel.approveLocation(loc)
+                    onApprove = { loc, additionalData ->
+                        userViewModel.approveLocation(loc, additionalData)
                         navController.navigate("MainMasterScreen") { popUpTo("MainMasterScreen") { inclusive = true } }
                     },
                     onReject = { loc ->
@@ -93,10 +95,11 @@ fun MasterScreen(navController: NavController) {
 @Composable
 fun ExpandableItemCard(
     location: LocationData,
-    onApprove: (LocationData) -> Unit,
+    onApprove: (LocationData, String) -> Unit,
     onReject: (LocationData) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var additionalData by remember { mutableStateOf("") }
 
     Card(
         modifier = Modifier
@@ -115,13 +118,20 @@ fun ExpandableItemCard(
                 Column(
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
+                    TextField(
+                        value = additionalData,
+                        onValueChange = { additionalData = it },
+                        label = { Text("가게에 대한 정보입력") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Box(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Button(
                             modifier = Modifier.align(Alignment.CenterStart),
                             onClick = {
-                                onApprove(location)
+                                onApprove(location, additionalData)
                                 expanded = false
                             }
                         ) {

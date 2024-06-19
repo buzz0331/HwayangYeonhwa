@@ -70,12 +70,14 @@ fun LoginScreen(navController: NavHostController) {
         Text(
             text = "화양연화",
             fontSize = 40.sp,
-            fontWeight = FontWeight.ExtraBold
+            fontWeight = FontWeight.ExtraBold,
+            color = Color(0xFF3F51B5)
         )
         Text(
             text = "화양동 핫플레이스를 한번에!",
             fontSize = 20.sp,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Normal,
+            color = Color(0xFF3F51B5)
         )
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -133,8 +135,8 @@ fun LoginScreen(navController: NavHostController) {
                 navController.navigate(NavRoutes.Register.route)
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color.Black
+                    containerColor = Color(0xFF3F51B5),
+                    contentColor = Color.White
                 ),
                 modifier = Modifier.padding(8.dp)
             ) {
@@ -156,8 +158,8 @@ fun LoginScreen(navController: NavHostController) {
                 }
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color.Black
+                    containerColor = Color(0xFF3F51B5),
+                    contentColor = Color.White
                 ),
                 modifier = Modifier.padding(8.dp)
             ) {

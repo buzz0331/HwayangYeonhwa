@@ -185,32 +185,32 @@ fun AddLocationScreen(navController: NavController) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { launcher.launch("image/*") },
-            modifier = Modifier.align(Alignment.Start),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3F51B5),
-                contentColor = Color.White
-            )
-        ) {
-            Text("사진 추가")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (selectedCategory == "음식점" || selectedCategory == "카페") {
+        Row (modifier = Modifier.align(Alignment.Start)){
             Button(
-                onClick = { menuLauncher.launch("image/*") },
-                modifier = Modifier.align(Alignment.Start),
+                onClick = { launcher.launch("image/*") },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF3F51B5),
                     contentColor = Color.White
                 )
             ) {
-                Text("메뉴 사진 추가")
+                Text("사진 추가")
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            if (selectedCategory == "음식점" || selectedCategory == "카페") {
+                Button(
+                    onClick = { menuLauncher.launch("image/*") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF3F51B5),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text("메뉴 사진 추가")
+                }
             }
         }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -225,7 +225,7 @@ fun AddLocationScreen(navController: NavController) {
                             else -> 3
                         },
                         Name = placeName,
-                        ID = navViewModel.LocationList.size + 1,
+                        ID = navViewModel.LocationList.size + 2,
                         isAccepted = false,
                         imageUrl = "",
                         review = review,
@@ -266,7 +266,10 @@ fun AddLocationScreen(navController: NavController) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 confirmButton = {
-                    TextButton(onClick = { showDialog = false }) {
+                    TextButton(onClick = {
+                        showDialog = false
+                        navController.popBackStack()
+                    }) {
                         Text("확인")
                     }
                 },

@@ -185,12 +185,20 @@ class UserViewModel(private val repository: Repository) : ViewModel() {
         val locationData = LocationList[locationIndex]
         locationData.updatePosReview(reviewIndex,userID)
         LocationList[locationIndex] = locationData // 객체를 업데이트하고 다시 리스트에 할당
+
+        viewModelScope.launch {
+            repository.updateLocation(locationData)
+        }
     }
 
     fun updateNegReview(locationIndex: Int, reviewIndex: Int, userID: String) {
         val locationData = LocationList[locationIndex]
         locationData.updateNegReview(reviewIndex,userID)
         LocationList[locationIndex] = locationData // 객체를 업데이트하고 다시 리스트에 할당
+
+        viewModelScope.launch {
+            repository.updateLocation(locationData)
+        }
     }
 
     fun addFavoriteLocation(locationData: LocationData) {
